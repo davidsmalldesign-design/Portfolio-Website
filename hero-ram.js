@@ -1,8 +1,8 @@
 // David Small Design — hero 3D ram scene
-// Loaded as a classic external module from jsDelivr (Webflow-safe).
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/DRACOLoader.js';
+// Uses esm.sh which resolves three's internal bare specifiers automatically.
+import * as THREE from 'https://esm.sh/three@0.160.0';
+import { GLTFLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js';
 
 (function () {
   var MODEL = 'https://cdn.jsdelivr.net/gh/davidsmalldesign-design/Portfolio-Website@main/neon_ram.glb';
