@@ -1,5 +1,4 @@
-// David Small Design — hero 3D ram scene
-// Uses esm.sh which resolves three's internal bare specifiers automatically.
+// David Small Design — hero 3D ram scene (v4: bottom-right, slow spin)
 import * as THREE from 'https://esm.sh/three@0.160.0';
 import { GLTFLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js';
@@ -29,14 +28,24 @@ import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/D
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 100);
-    camera.position.set(1.15, 0.85, 6);
+    camera.position.set(0, 0, 6);
 
     var key = new THREE.DirectionalLight(0xc6ff3a, 3.2); key.position.set(-3, 2, 4); scene.add(key);
     var rim = new THREE.DirectionalLight(0x9ae600, 1.6); rim.position.set(4, 1, -3); scene.add(rim);
     var fill = new THREE.DirectionalLight(0x223018, 1.0); fill.position.set(0, -3, 2); scene.add(fill);
     scene.add(new THREE.AmbientLight(0x141414, 1.0));
 
+    // pivot holds the model; we offset the pivot to park it bottom-right
     var pivot = new THREE.Group(); scene.add(pivot);
+
+    // how far right/down to push, in world units (recomputed on resize for responsiveness)
+    function placePivot() {
+      var aspect = hero.clientWidth / hero.clientHeight;
+      pivot.position.x = 2.1;            // push right
+      pivot.position.y = -1.2;           // push down
+      if (aspect < 1) { pivot.position.x = 1.0; pivot.position.y = -1.8; } // portrait: less right, more down
+    }
+    placePivot();
 
     var draco = new DRACOLoader();
     draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
@@ -50,7 +59,7 @@ import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/D
       var center = box.getCenter(new THREE.Vector3());
       model.position.sub(center);
       var maxd = Math.max(size.x, size.y, size.z) || 1;
-      model.scale.setScalar(3.0 / maxd);
+      model.scale.setScalar(2.6 / maxd);   // smaller: corner accent, not centerpiece
       pivot.add(model);
       holder.classList.add('is-ready');
 
@@ -63,10 +72,10 @@ import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/D
 
       function tick() {
         raf = requestAnimationFrame(tick);
-        t += 0.0007;
+        t += 0.0007;                         // 5x slower spin
         mx += (tx - mx) * 0.05; my += (ty - my) * 0.05;
-        pivot.rotation.y = (reduce ? 0 : t) + mx * 0.6;
-        pivot.rotation.x = my * 0.4;
+        model.rotation.y = (reduce ? 0 : t) + mx * 0.6;
+        model.rotation.x = my * 0.4;
         renderer.render(scene, camera);
       }
       tick();
@@ -75,9 +84,10 @@ import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/D
         var nw = hero.clientWidth, nh = hero.clientHeight;
         camera.aspect = nw / nh; camera.updateProjectionMatrix();
         renderer.setSize(nw, nh);
+        placePivot();
       }, { passive: true });
 
-      console.log('[ram] loaded ok');
+      console.log('[ram] loaded ok — v4 bottom-right');
     }, function (p) {}, function (err) {
       console.error('[ram] model load failed', err);
       holder.remove();
