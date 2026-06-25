@@ -29,7 +29,7 @@ import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/D
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 100);
-    camera.position.set(0, 0, 6);
+    camera.position.set(1.15, 0.85, 6);
 
     var key = new THREE.DirectionalLight(0xc6ff3a, 3.2); key.position.set(-3, 2, 4); scene.add(key);
     var rim = new THREE.DirectionalLight(0x9ae600, 1.6); rim.position.set(4, 1, -3); scene.add(rim);
@@ -50,7 +50,7 @@ import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/D
       var center = box.getCenter(new THREE.Vector3());
       model.position.sub(center);
       var maxd = Math.max(size.x, size.y, size.z) || 1;
-      model.scale.setScalar(3.6 / maxd);
+      model.scale.setScalar(3.0 / maxd);
       pivot.add(model);
       holder.classList.add('is-ready');
 
@@ -63,7 +63,7 @@ import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/D
 
       function tick() {
         raf = requestAnimationFrame(tick);
-        t += 0.0035;
+        t += 0.0007;
         mx += (tx - mx) * 0.05; my += (ty - my) * 0.05;
         pivot.rotation.y = (reduce ? 0 : t) + mx * 0.6;
         pivot.rotation.x = my * 0.4;
